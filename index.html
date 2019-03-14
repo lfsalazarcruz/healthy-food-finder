@@ -48,16 +48,26 @@
         center: [-105.0178157, 39.737925], // Starting position [lng, lat]
         zoom: 12 // Starting zoom level
       });
+
       map.on("load", function() {
         var geocoder = new MapboxGeocoder({
           // Initialize the geocoder
           accessToken: mapboxgl.accessToken, // Set the access token
           zoom: 13, // Set the zoom level for geocoding results
           placeholder: "Enter an address or place name", // This placeholder text will display in the search bar
-          bbox: [-105.116, 39.679, -104.898, 39.837] // Set a bounding box
+          bbox: [-105.116, 39.679, -104.898, 39.837] // Set a bounding box. Read Geocoding API documentation for more info.
         });
         // Add the geocoder to the map
         map.addControl(geocoder, "top-left"); // Add the search box to the top left
+
+        var marker = new mapboxgl.Marker({ color: "#008000" }); // Create a new green marker
+
+        geocoder.on("result", function(data) {
+          // When the geocoder returns a result
+          var point = data.result.center; // Capture the result coordinates
+
+          marker.setLngLat(point).addTo(map); // Add the marker to the map at the result coordinates
+        });
       });
     </script>
   </body>
